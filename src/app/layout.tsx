@@ -4,6 +4,7 @@ import "./globals.css";
 import { Background } from "@/components/ui/Background";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -35,13 +36,16 @@ export default function RootLayout({
       <body className={`${outfit.variable} ${inter.variable} ${mono.variable} font-sans antialiased bg-zinc-950 text-zinc-100 overflow-x-hidden`}>
         <Background />
         
-        <Sidebar />
+        <div className="hidden md:block">
+          <Sidebar />
+        </div>
         
-        <div className="flex flex-col min-h-screen transition-all duration-300 ease-in-out pl-[80px]">
+        <div className="flex flex-col min-h-screen transition-all duration-300 ease-in-out md:pl-[80px]">
           <Header />
-          <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+          <main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full pb-24 md:pb-10">
             {children}
           </main>
+          <MobileNav />
         </div>
       </body>
     </html>

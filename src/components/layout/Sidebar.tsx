@@ -10,7 +10,8 @@ import {
   BrainCircuit, 
   ChevronLeft, 
   ChevronRight,
-  User
+  User,
+  HelpCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -19,6 +20,7 @@ const navItems = [
   { name: 'Generator', icon: Zap, path: '/generator' },
   { name: 'Workflow', icon: Trello, path: '/workflow' },
   { name: 'Notes', icon: BrainCircuit, path: '/notes' },
+  { name: 'Help', icon: HelpCircle, path: '/help' },
 ];
 
 export function Sidebar() {

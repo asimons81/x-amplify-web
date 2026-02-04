@@ -1,102 +1,158 @@
-import React, { Suspense } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { 
-  Users, 
   Zap, 
-  Lightbulb, 
+  ClipboardList, 
+  Brain, 
+  Copy, 
+  Check,
   ArrowRight,
-  PlusCircle,
-  Newspaper
+  History
 } from 'lucide-react';
 import Link from 'next/link';
-import { StatCard } from '@/components/dashboard/StatCard';
-import { ExitTracker } from '@/components/dashboard/ExitTracker';
-import { TrendPulse } from '@/components/dashboard/TrendPulse';
-import { ActiveDirectives } from '@/components/dashboard/ActiveDirectives';
+
+interface GenerationHistory {
+  id: string;
+  timestamp: number;
+  input: string;
+  thesis: string;
+  posts: Record<string, string>;
+}
 
 export default function DashboardPage() {
+  const [history, setHistory] = useState<GenerationHistory[]>([]);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('x_amplify_history');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setHistory(parsed.slice(0, 5)); // Only show last 5
+      } catch (e) {
+        console.error("Failed to parse history");
+      }
+    }
+  }, []);
+
+  const handleCopy = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
-    <div className="space-y-10 pb-20">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white mb-2">
-            COMMAND<span className="text-blue-500">CENTER</span>
-          </h1>
-          <p className="text-zinc-500 font-mono text-xs uppercase tracking-[0.2em]">
-            Operational Overview — Phase: <span className="text-zinc-300">Growth & Automate</span>
-          </p>
-        </div>
+    <div className="max-w-6xl mx-auto space-y-12 py-10 px-4">
+      {/* Hero Section */}
+      <section className="text-center space-y-4 py-12">
+        <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-white">
+          OZZY <span className="text-blue-500">OS</span>
+        </h1>
+        <p className="text-zinc-500 font-medium text-lg md:text-xl uppercase tracking-[0.3em]">
+          Your Personal Content Engine
+        </p>
+      </section>
 
-        <div className="flex items-center gap-3">
-          <Link 
-            href="/generator"
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition-all text-white font-bold text-sm shadow-lg shadow-blue-500/20 group"
-          >
-            <PlusCircle size={18} className="group-hover:rotate-90 transition-transform" />
-            Generate Content
-          </Link>
-          <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-zinc-300 font-bold text-sm">
-            Quick Note
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard 
-          label="X Followers" 
-          value="12.4K" 
-          sublabel="Total reach across accounts"
-          icon={<Users size={20} />}
-          trend={{ value: 12, isUp: true }}
-          color="blue"
-        />
-        <StatCard 
-          label="Daily Renders" 
-          value="42" 
-          sublabel="Remotion jobs completed"
-          icon={<Zap size={20} />}
-          trend={{ value: 5, isUp: true }}
-          color="purple"
-        />
-        <StatCard 
-          label="Ideas in Pipeline" 
-          value="156" 
-          sublabel="Scouted from HN & Reddit"
-          icon={<Lightbulb size={20} />}
-          color="amber"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Column */}
-        <div className="space-y-8">
-          <ExitTracker />
-          <ActiveDirectives />
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-8">
-          <Suspense fallback={<div className="h-[400px] w-full bg-zinc-900/50 rounded-2xl animate-pulse" />}>
-            <TrendPulse />
-          </Suspense>
-
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 shadow-2xl relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 opacity-10 group-hover:scale-110 transition-transform duration-700">
-              <Newspaper size={200} />
+      {/* Action Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <Link href="/generator" className="group">
+          <div className="h-full p-8 rounded-3xl bg-zinc-900 border-2 border-zinc-800 hover:border-blue-500/50 transition-all flex flex-col items-center text-center space-y-6 shadow-2xl hover:shadow-blue-500/10 active:scale-95">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+              <Zap size={32} fill="currentColor" />
             </div>
-            <div className="relative z-10">
-              <h3 className="text-xl font-black text-white mb-2">Draft Next Newsletter</h3>
-              <p className="text-white/70 text-sm mb-6 max-w-[280px]">
-                You have 12 new ideas scouted since the last edition. Ready to synthesize?
-              </p>
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-indigo-700 font-bold text-sm hover:bg-zinc-100 transition-colors">
-                Start Drafting <ArrowRight size={16} />
-              </button>
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-tight">Generate X Posts</h2>
+              <p className="text-zinc-500 text-sm">Turn any idea into 10 viral posts using the Stijn Method.</p>
+            </div>
+            <div className="mt-auto w-full py-4 rounded-xl bg-blue-600 text-white font-bold group-hover:bg-blue-500 transition-colors text-center">
+              Launch Generator
             </div>
           </div>
-        </div>
+        </Link>
+
+        <Link href="/workflow" className="group">
+          <div className="h-full p-8 rounded-3xl bg-zinc-900 border-2 border-zinc-800 hover:border-purple-500/50 transition-all flex flex-col items-center text-center space-y-6 shadow-2xl hover:shadow-purple-500/10 active:scale-95">
+            <div className="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
+              <ClipboardList size={32} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-tight">Content Pipeline</h2>
+              <p className="text-zinc-500 text-sm">Track your ideas from raw concepts to published posts.</p>
+            </div>
+            <div className="mt-auto w-full py-4 rounded-xl bg-purple-600 text-white font-bold group-hover:bg-purple-500 transition-colors text-center">
+              Open Board
+            </div>
+          </div>
+        </Link>
+
+        <Link href="/notes" className="group">
+          <div className="h-full p-8 rounded-3xl bg-zinc-900 border-2 border-zinc-800 hover:border-amber-500/50 transition-all flex flex-col items-center text-center space-y-6 shadow-2xl hover:shadow-amber-500/10 active:scale-95">
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+              <Brain size={32} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-tight">Notes</h2>
+              <p className="text-zinc-500 text-sm">Browse your journals, concepts, and content templates.</p>
+            </div>
+            <div className="mt-auto w-full py-4 rounded-xl bg-amber-600 text-white font-bold group-hover:bg-amber-500 transition-colors text-center">
+              View Knowledge Base
+            </div>
+          </div>
+        </Link>
       </div>
+
+      {/* Recent Generations */}
+      {history.length > 0 && (
+        <section className="space-y-6 pt-12">
+          <div className="flex items-center justify-between px-2">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <History size={20} className="text-blue-500" />
+              Recent Generations
+            </h3>
+            <Link href="/generator" className="text-zinc-500 hover:text-white text-sm font-medium flex items-center gap-1 transition-colors">
+              View All <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {history.map((item) => {
+              const firstPost = Object.values(item.posts)[0] || "";
+              return (
+                <div 
+                  key={item.id}
+                  className="p-6 rounded-2xl bg-zinc-900/50 border border-white/5 hover:border-white/10 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+                >
+                  <div className="flex-1 min-w-0 text-left">
+                    <p className="text-zinc-300 font-medium truncate mb-1">
+                      {item.thesis}
+                    </p>
+                    <p className="text-zinc-500 text-xs truncate">
+                      {new Date(item.timestamp).toLocaleString()} • {item.input}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCopy(firstPost, item.id)}
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-zinc-300 text-sm font-bold group-hover:border-blue-500/30"
+                  >
+                    {copiedId === item.id ? (
+                      <>
+                        <Check size={16} className="text-green-500" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={16} />
+                        Copy Post
+                      </>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

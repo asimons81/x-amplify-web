@@ -21,10 +21,9 @@ import { KanbanColumn } from './KanbanColumn';
 import { KanbanCard } from './KanbanCard';
 
 const COLUMNS = [
-  { id: 'scouted', title: 'Scouted' },
-  { id: 'writing', title: 'Writing' },
-  { id: 'rendering', title: 'Rendering' },
-  { id: 'scheduled', title: 'Scheduled' },
+  { id: 'ideas', title: 'Ideas' },
+  { id: 'drafting', title: 'Drafting' },
+  { id: 'ready', title: 'Ready' },
   { id: 'posted', title: 'Posted' },
 ];
 
@@ -42,12 +41,26 @@ export function KanbanBoard() {
   useEffect(() => {
     const saved = localStorage.getItem('ozzy_kanban_tasks');
     if (saved) {
-      setTasks(JSON.parse(saved));
+      try {
+        let parsedTasks = JSON.parse(saved);
+        
+        // Migration logic for simplified columns
+        parsedTasks = parsedTasks.map((task: Task) => {
+          if (task.columnId === 'scouted') return { ...task, columnId: 'ideas' };
+          if (task.columnId === 'writing') return { ...task, columnId: 'drafting' };
+          if (task.columnId === 'rendering' || task.columnId === 'scheduled') return { ...task, columnId: 'ready' };
+          return task;
+        });
+
+        setTasks(parsedTasks);
+      } catch (e) {
+        console.error("Failed to parse tasks");
+      }
     } else {
       // Default tasks
       const initialTasks = [
-        { id: '1', title: 'Building the Command OS', columnId: 'writing', content: 'Unified hub for all projects' },
-        { id: '2', title: 'Stijn Method Analysis', columnId: 'scouted', content: 'Break down the viral hooks' },
+        { id: '1', title: 'Building the Command OS', columnId: 'drafting', content: 'Unified hub for all projects' },
+        { id: '2', title: 'Stijn Method Analysis', columnId: 'ideas', content: 'Break down the viral hooks' },
       ];
       setTasks(initialTasks);
     }
