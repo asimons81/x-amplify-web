@@ -1,7 +1,10 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-outfit: var(--font-outfit);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
 }
 
 :root {
@@ -51,6 +54,6 @@ body {
     radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
 }
 
-.glow-card:hover {
-  box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.15);
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit), sans-serif;
 }

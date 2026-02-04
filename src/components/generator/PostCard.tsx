@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { Copy, Check, AlertTriangle, XCircle, RefreshCw, Twitter, Edit2, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tooltip } from './Tooltip';
+import { Tooltip } from '../ui/Tooltip';
 import { EditModal } from './EditModal';
-import { regenerateSinglePostAction } from '@/app/actions';
+import { regenerateSinglePostAction } from '@/app/generator/actions';
 
 interface PostCardProps {
   id: string;
