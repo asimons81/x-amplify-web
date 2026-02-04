@@ -93,6 +93,57 @@ export async function generateAllFormats(thesis: string, maxRetries = 2): Promis
       if (attempt === maxRetries) throw e;
     }
   }
-
   throw new Error("Failed to generate valid posts after retries");
+}
+
+export async function generateSingleFormat(thesis: string, formatKey: string): Promise<string> {
+  const model = genAI.getGenerativeModel({ 
+    model: MODEL_NAME,
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: SchemaType.OBJECT,
+        properties: {
+          post: { type: SchemaType.STRING }
+        },
+        required: ["post"]
+      } as any
+    }
+  });
+
+  const prompt = `
+  You are an elite X (Twitter) ghostwriter trained on the viral strategies of Stijn Noorman.
+  Generate exactly ONE post for the thesis provided using the format: ${formatKey.replace('_', ' ').toUpperCase()}.
+
+  THE THESIS:
+  ${thesis}
+
+  FORMAT DESCRIPTION:
+  ${STIJN_METHOD_PROMPT.split('═══════════════════════════════════════════════════════════════════════════════')[1]}
+
+  GLOBAL STYLE CONSTRAINTS:
+  ${STIJN_METHOD_PROMPT.split('═══════════════════════════════════════════════════════════════════════════════')[2]}
+
+  OUTPUT: Return a JSON object with a single key "post".
+  `;
+
+  const result = await model.generateContent({
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: {
+      temperature: 0.8,
+      maxOutputTokens: 500,
+    },
+  });
+
+  const text = result.response.text();
+  const parsed = JSON.parse(text);
+  let post = parsed.post.replace(/\\n/g, '\n');
+  
+  // Quick validation
+  const validation = validateAllPosts({ [formatKey]: post });
+  if (validation[formatKey].cleanedContent) {
+    post = validation[formatKey].cleanedContent;
+  }
+  
+  return post;
 }

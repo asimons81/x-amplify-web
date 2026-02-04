@@ -166,3 +166,16 @@ export const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   extremes_post: "⚡ Extremes",
   callout_post: "🎯 Callout",
 };
+
+export const FORMAT_DESCRIPTIONS: Record<string, string> = {
+  contrast_post: "Visual comparison using ❌/✅ to highlight the right way vs. the wrong way.",
+  milestone_post: "A growth update showing progress from 0 to X to build authority and trust.",
+  symmetric_comparison: "Perfectly balanced vertical lists comparing two eras or concepts.",
+  list_post: "A clear, numbered list of 5 actionable items with bold headers.",
+  split_sentence: "A 2-line suspenseful hook that creates curiosity and delivers a punchy insight.",
+  intentional_error: "A raw, authentic post with minor intentional errors to increase human feel.",
+  double_definition: "Contrasts the behavior of 'The Amateur' vs. 'The Pro' in your niche.",
+  triad_structure: "A rhythmic 3-line structure: Action, Action, Result.",
+  extremes_post: "Starts with a bold superlative hook followed by a hard-hitting truth.",
+  callout_post: "Challenges popular opinion with a contrarian take and reasoning.",
+};
