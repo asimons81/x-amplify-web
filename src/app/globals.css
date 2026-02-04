@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --font-outfit: var(--font-outfit);
+}
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+body {
+  color: var(--foreground);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  min-height: 100vh;
+  font-family: var(--font-outfit), system-ui, sans-serif;
+}
