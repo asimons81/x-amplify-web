@@ -12,9 +12,9 @@ const genAI = new GoogleGenerativeAI(apiKey || "");
 
 // Use the same model as the Python version if possible
 // The Python code used "gemini-3-flash-preview". 
-// We'll use "gemini-1.5-flash" as a stable fallback if 3 is not available in Node SDK yet, 
+// We'll use "gemini-3-pro-preview" as a stable fallback if 3 is not available in Node SDK yet, 
 // but try to respect the user's config.
-const MODEL_NAME = "gemini-1.5-flash"; 
+const MODEL_NAME = "gemini-3-pro-preview"; 
 
 export async function extractThesis(content: string): Promise<string> {
   const model = genAI.getGenerativeModel({ model: MODEL_NAME });
